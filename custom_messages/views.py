@@ -1,4 +1,5 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, mixins, status
+from rest_framework.response import Response
 from django.db.models import Q  
 from .models import CustomMessage    
 from .serializers import MessageSerializer
@@ -11,10 +12,25 @@ class MessageListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(sender=self.request.user)
 
-class MessageRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class MessageRetrieveUpdateDestroyView(mixins.RetrieveModelMixin, 
+                                       mixins.DestroyModelMixin, 
+                                       mixins.UpdateModelMixin, 
+                                       generics.GenericAPIView):
     queryset = CustomMessage.objects.all()   
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+      response = self.destroy(request, *args, **kwargs)
+      if response.status_code == status.HTTP_204_NO_CONTENT:
+          return Response({"message": "Message deleteed successfully"}, status=status.HTTP_200_OK)
+      return response
+
+    def patch(self, request, *args, **kwargs):  # Only PATCH allowed
+        return self.partial_update(request, *args, **kwargs)
 
 class UserMessagesListView(generics.ListAPIView):
     serializer_class = MessageSerializer
