@@ -69,6 +69,31 @@ class DeclineFriendRequestView(APIView):
         return Response({"error": "FriendRequest ID required"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class DeleteFriendView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        friend_id = request.data.get('friend_id')
+        if friend_id:
+            try:
+                friend = CustomUser.objects.get(pk=friend_id)
+            except CustomUser.DoesNotExist:
+                return Response({"error": "Friend not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            try:
+                friend_list = FriendList.objects.get(user=request.user)
+            except FriendList.DoesNotExist:
+                return Response({"error": "FriendList not found for the user"}, status=status.HTTP_404_NOT_FOUND)
+
+            # Remove the friend from user's friend list and vice versa
+            friend_list.remove_friend(friend)
+            friend_user_friend_list = FriendList.objects.get(user=friend)
+            friend_user_friend_list.remove_friend(request.user)
+
+            return Response({"message": "Friend removed successfully"}, status=status.HTTP_200_OK)
+        return Response({"error": "Friend ID required"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ListFriendRequestsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
