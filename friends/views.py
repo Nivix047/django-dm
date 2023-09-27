@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import permissions, status
 from users.models import CustomUser
 from .models import FriendRequest, FriendList
-from .serializers import FriendRequestSerializer
+from .serializers import FriendRequestSerializer, CustomUserSerializer
 
 
 class SendFriendRequestView(APIView):
@@ -75,4 +75,18 @@ class ListFriendRequestsView(APIView):
     def get(self, request):
         friend_requests = FriendRequest.objects.filter(receiver=request.user)
         serializer = FriendRequestSerializer(friend_requests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ListFriendsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        try:
+            friend_list = FriendList.objects.get(user=request.user)
+        except FriendList.DoesNotExist:
+            return Response({"error": "FriendList not found for the user"}, status=status.HTTP_404_NOT_FOUND)
+
+        friends = friend_list.friends.all()
+        serializer = CustomUserSerializer(friends, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
