@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "users",
     "custom_messages",
+    "friends",
     "rest_framework",
     "rest_framework.authtoken",
 ]
