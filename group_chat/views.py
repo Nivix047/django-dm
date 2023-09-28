@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from .models import Group, GroupInvitation, GroupMessage
-from .serializers import GroupSerializer, GroupMessageSerializer
+from .serializers import GroupSerializer, GroupMessageSerializer, GroupInvitationSerializer
 from users.models import CustomUser
 
 
@@ -121,3 +121,29 @@ class SendGroupMessageView(APIView):
             sender=request.user, group=group, content=content)
 
         return Response({"message": "Message sent successfully"}, status=status.HTTP_201_CREATED)
+
+
+class ListGroupInvitationsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        invitations = GroupInvitation.objects.filter(
+            recipient=request.user, accepted=False)
+        serializer = GroupInvitationSerializer(invitations, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ListGroupMessagesView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, group_id):
+        try:
+            group = Group.objects.get(pk=group_id)
+            if request.user not in group.members.all():
+                return Response({"error": "User not a member of the group"}, status=status.HTTP_403_FORBIDDEN)
+
+            messages = GroupMessage.objects.filter(group=group)
+            serializer = GroupMessageSerializer(messages, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Group.DoesNotExist:
+            return Response({"error": "Group not found"}, status=status.HTTP_404_NOT_FOUND)
