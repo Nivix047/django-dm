@@ -212,3 +212,32 @@ class DeclineGroupInvitationView(APIView):
         invitation.delete()
 
         return Response({"message": "Invitation declined successfully"}, status=status.HTTP_200_OK)
+
+# Leave group
+
+
+class LeaveGroupView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        group_id = request.data.get('group_id')
+
+        if not group_id:
+            return Response({"error": "Group ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            group = Group.objects.get(pk=group_id)
+            if request.user not in group.members.all():
+                return Response({"error": "User is not a member of the group"}, status=status.HTTP_403_FORBIDDEN)
+
+            # Remove the user from the group's members
+            group.members.remove(request.user)
+
+            # If the group becomes empty after a member leave, it deletes the group
+            if not group.members.exists():
+                group.delete()
+
+        except Group.DoesNotExist:
+            return Response({"error": "Group not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({"message": "Sucessfully left the group"}, status=status.HTTP_200_OK)
