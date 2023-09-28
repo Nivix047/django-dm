@@ -1,27 +1,33 @@
 from rest_framework import generics, permissions, mixins, status
 from rest_framework.response import Response
-from django.db.models import Q  
-from .models import CustomMessage    
+from django.db.models import Q
+from .models import CustomMessage
 from .serializers import MessageSerializer
 
 # Endpoint to list all messages and create a new message
+
+
 class MessageListCreateView(generics.ListCreateAPIView):
     queryset = CustomMessage.objects.all()  # All messages will be listed
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Only authenticated users can access
+    # Only authenticated users can access
+    permission_classes = [permissions.IsAuthenticated]
 
     # Overrides the save method to automatically set the sender to the current user
     def perform_create(self, serializer):
         serializer.save(sender=self.request.user)
 
 # Endpoint to retrieve, update, and delete a specific message
-class MessageRetrieveUpdateDestroyView(mixins.RetrieveModelMixin, 
-                                       mixins.DestroyModelMixin, 
-                                       mixins.UpdateModelMixin, 
+
+
+class MessageRetrieveUpdateDestroyView(mixins.RetrieveModelMixin,
+                                       mixins.DestroyModelMixin,
+                                       mixins.UpdateModelMixin,
                                        generics.GenericAPIView):
-    queryset = CustomMessage.objects.all()   
+    queryset = CustomMessage.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Only authenticated users can access
+    # Only authenticated users can access
+    permission_classes = [permissions.IsAuthenticated]
 
     # Retrieve a specific message
     def get(self, request, *args, **kwargs):
@@ -39,6 +45,8 @@ class MessageRetrieveUpdateDestroyView(mixins.RetrieveModelMixin,
         return self.partial_update(request, *args, **kwargs)
 
 # Endpoint to list all messages sent or received by the current user
+
+
 class UserMessagesListView(generics.ListAPIView):
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -49,6 +57,8 @@ class UserMessagesListView(generics.ListAPIView):
         return CustomMessage.objects.filter(Q(sender=user) | Q(recipient=user))
 
 # Endpoint to list all messages between the current user and another specified user
+
+
 class ConversationBetweenUsersListView(generics.ListAPIView):
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -58,6 +68,6 @@ class ConversationBetweenUsersListView(generics.ListAPIView):
         user1 = self.request.user
         user2_id = self.kwargs['user_id']
         return CustomMessage.objects.filter(
-            Q(sender=user1, recipient__id=user2_id) | 
+            Q(sender=user1, recipient__id=user2_id) |
             Q(sender__id=user2_id, recipient=user1)
         )

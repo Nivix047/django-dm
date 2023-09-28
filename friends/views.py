@@ -5,6 +5,8 @@ from users.models import CustomUser
 from .models import FriendRequest, FriendList
 from .serializers import FriendRequestSerializer, CustomUserSerializer
 
+# Send friend request
+
 
 class SendFriendRequestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -26,6 +28,8 @@ class SendFriendRequestView(APIView):
             return Response({"message": "Friend request sent"}, status=status.HTTP_201_CREATED)
 
         return Response({"error": "Receiver ID required"}, status=status.HTTP_400_BAD_REQUEST)
+
+# Accept friend request
 
 
 class AcceptFriendRequestView(APIView):
@@ -60,6 +64,8 @@ class AcceptFriendRequestView(APIView):
 
         return Response({"error": "FriendRequest ID required"}, status=status.HTTP_400_BAD_REQUEST)
 
+# Decline friend request
+
 
 class DeclineFriendRequestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -81,6 +87,8 @@ class DeclineFriendRequestView(APIView):
             return Response({"message": "Friend request declined"}, status=status.HTTP_200_OK)
 
         return Response({"error": "FriendRequest ID required"}, status=status.HTTP_400_BAD_REQUEST)
+
+# Decline friend request
 
 
 class DeleteFriendView(APIView):
@@ -112,6 +120,8 @@ class DeleteFriendView(APIView):
 
         return Response({"error": "Friend ID required"}, status=status.HTTP_400_BAD_REQUEST)
 
+# List friend requests
+
 
 class ListFriendRequestsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -121,6 +131,8 @@ class ListFriendRequestsView(APIView):
         friend_requests = FriendRequest.objects.filter(receiver=request.user)
         serializer = FriendRequestSerializer(friend_requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+# List friends
 
 
 class ListFriendsView(APIView):

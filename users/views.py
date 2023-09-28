@@ -10,6 +10,8 @@ from rest_framework.authtoken.models import Token
 from .models import CustomUser
 from .serializers import CustomUserSerializer
 
+# Endpoint for user registration with token-based authentication
+
 
 class RegisterView(APIView):
     # Permission set to allow any user (including unauthenticated) to access this view
@@ -32,6 +34,8 @@ class RegisterView(APIView):
 
         # If the serialized data isn't valid, return an error response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Endpoint for user login with token-based authentication
 
 
 @api_view(["POST"])
@@ -57,16 +61,15 @@ def login_view(request):
     else:
         return Response({"error": "Invalid Credentials"}, status=401)
 
+# Endpoint to list all users and create a new user
+
 
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [AllowAny]  # Allowing any for registration
 
-    def perform_create(self, serializer):
-        user = serializer.save()
-        # This creates a token for the user
-        Token.objects.get_or_create(user=user)
+# Endpoint to retrieve, update, and delete a specific user
 
 
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
