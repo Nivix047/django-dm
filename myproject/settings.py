@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "users",
     "custom_messages",
     "friends",
+    "group_chat",
     "rest_framework",
     "rest_framework.authtoken",
 ]
