@@ -134,8 +134,9 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.AllowAny",
+        "rest_framework.permissions.IsAuthenticated",
     ),
+    'TOKEN_MODEL': 'users.ExpiringToken'
 }
 
 # Configuration for logging in Django.
