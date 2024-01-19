@@ -70,7 +70,7 @@ Once the server is running, the API endpoints are accessible and ready for inter
 
 To help you get started with using the API, I prepared a short video tutorial. This tutorial demonstrates the process of sending a friend reqest, accepting it, and then verifying the updated friend list. It provides a practical example of how to use the API endpoints in Insomnia, including the usage of authentication tokens.
 
-**Video Tutorial:** [How to test the API endpoints of Direct Messaging App using Insomnia](https://drive.google.com/file/d/1MdnPP3R1qNwsWriB4PwVGQ6p5NWlMgLl/view)
+**Video Tutorial:** [How to test the API endpoints of Direct Messaging App using Insomnia](https://www.youtube.com/watch?v=B9RKV9K4B1s&ab_channel=Daniel)
 
 **Key Points Covered in the Video:**
 
