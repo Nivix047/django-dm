@@ -28,18 +28,19 @@ Direct Messaging App is a comprehensive backend solution for a Direct Messaging 
 
 2. Install dependencies.
 
-- pip install -r requirements.txt
+- pip3 install -r requirements.txt
 
 3. Create a PostgreSQL database.
 
 4. Environment Variables:
-   SECRET_KEY=your_secret_key
-   DEBUG=True
-   DATABASE_NAME=your_database_name
-   DATABASE_USER=your_database_user
-   DATABASE_PASSWORD=your_database_password
-   DATABASE_HOST=your_database_host
-   DATABASE_PORT=your_database_port
+
+- SECRET_KEY=your_secret_key
+- DEBUG=True
+- DATABASE_NAME=your_database_name
+- DATABASE_USER=your_database_user
+- DATABASE_PASSWORD=your_database_password
+- DATABASE_HOST=your_database_host
+- DATABASE_PORT=your_database_port
 
 ## Testing
 
@@ -64,3 +65,16 @@ To use the Direct Messaging App, follow these steps:
 3. **Start the Server:** Execute `python3 manage.py runserver` to start the Django development server.
 
 Once the server is running, the API endpoints are accessible and ready for interaction.
+
+## Tutorial
+
+To help you get started with using the API, I prepared a short video tutorial. This tutorial demonstrates the process of sending a friend reqest, accepting it, and then verifying the updated friend list. It provides a practical example of how to use the API endpoints in Insomnia, including the usage of authentication tokens.
+
+**Video Tutorial:** [How to test the API endpoints of Direct Messaging App using Insomnia](https://drive.google.com/file/d/1MdnPP3R1qNwsWriB4PwVGQ6p5NWlMgLl/view)
+
+**Key Points Covered in the Video:**
+
+- **Sending a Friend Request:** Shows how to send a friend request from one user to another.
+- **Accepting the Friend Request:** Demonstrates the process of accepting the friend request.
+- **Verifying the Friend List:** A GET request to confirm the new friend is added to the user's friend list.
+- **Using Authentication Tokens:** Explains how to use tokens for authenticated requests in Insomnia.
